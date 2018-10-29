@@ -3,7 +3,10 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template
 from flask import request, session, abort
+
 from pymongo import MongoClient
+from bson.json_util import dumps, loads
+import json
 
 import datetime
 import os
@@ -100,7 +103,7 @@ def do_relabel_image(previous=False):
         except StopIteration:
             return "Congrats, You're Done :) To be sure reboot app."
         
-        session['current'] = record
+        session['current'] = sanitizeRecord(record)
 
         path = "/static/data/" + record['original']
 
@@ -118,8 +121,10 @@ def do_relabel_image(previous=False):
             try:
                 record = next(image_queue)
 
-                # session['current'] = 
+                session['current'] = sanitizeRecord(record)
                 path = "/static/data/" + record['original']
+
+                print("TEST NONE: ", record['original'])
 
                 return render_template('relabel.html',
                     image_path=path,
@@ -129,27 +134,36 @@ def do_relabel_image(previous=False):
                 return """Congrats, You're Done :) 
                 To be sure reboot app."""
         else:
+
+
             contour = request.form.get('contour')
             numbers = request.form.get('numbers')
             hands = request.form.get('hands')
-         
-            updated_label= record['original'][:-6] + createLabel(
-                                                        contour,
-                                                        numbers,
-                                                        hands)
-        
+
+            tail = createLabel(contour,
+                    numbers,
+                    hands) + record['original'][-4:]
+
+            updated_label= record['original'][:-10] + tail
+            
+            # Creating a new record
+
             new_record = { "original": record["original"],
                     "relabeled": 1,
                     "new_label": updated_label,
                     "author": session["username"],
                     "date": datetime.datetime.utcnow()}
+            
+            # Push update to the database
 
+            temp = loads(dumps(record))
 
-            """
-            images.update_one("_id": record["_id"],
-                "$set": new_record,
-                upsert=False)
-            """
+            images.update_one({"_id": temp['_id']},
+                    {"$set": new_record},
+                    upsert=False)
+
+            for doc in images.find({ "_id" : temp["_id"]}):
+                print(doc)
 
             try:
                 record = next(image_queue)
@@ -157,12 +171,16 @@ def do_relabel_image(previous=False):
                 return """Congrats, You're Done :) 
                         To be sure reboot app."""
 
-            session['current'] = record
+            session['current'] = sanitizeRecord(record)
             path = "/static/data/" + record['original']
 
             return render_template('relabel.html',
                     image_path=path,
                     image_name=record['original'])
+
+
+def previous_image():
+    return "sorry, nothing to see here"
 
 def createLabel(contour, numbers, hands):
     # small utility function to creat a c*n*h* label
@@ -184,3 +202,6 @@ def createLabel(contour, numbers, hands):
         label = label + 'h' + '1'
 
     return label
+
+def sanitizeRecord(record):
+    return json.loads(dumps(record))
