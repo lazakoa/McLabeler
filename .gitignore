@@ -1,6 +1,7 @@
 
-# Raw data.
+# Raw data
 data/
+new_data/
 
 # Directory for MongoDB.
 database/
