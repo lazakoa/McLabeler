@@ -189,7 +189,7 @@ def createLabel(contour, numbers, hands):
     if contour == None:
         label = 'c' + '0'
     else:
-        lable = 'c' + '1'
+        label = 'c' + '1'
 
     if numbers == None:
         label = label + 'n' + '0'
