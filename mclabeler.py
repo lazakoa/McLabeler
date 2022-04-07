@@ -58,7 +58,7 @@ def do_admin_login():
 
                 return do_relabel_image()
             else:
-                return 'Invalid password.'
+                return render_template('invalidpassword.html')
 
     return home()
 
@@ -85,7 +85,7 @@ def do_user_signup():
 
             return do_relabel_image()
         else:
-            return "Username already exists."
+            return render_template('usernamealready.html')
 
     return render_template('signup.html')
 
@@ -97,12 +97,13 @@ def do_relabel_image(previous=False):
     """
     Read off the record queue, display a message if queue is empty.
     """
-        
+
+    # Working on the relabel page,
     if request.method == "GET":
         try:
             record = next(image_queue)
         except StopIteration:
-            return "Congrats, You're Done :) To be sure reboot app."
+            return render_template('done.html')
         
         session['current'] = record
 
@@ -125,21 +126,22 @@ def do_relabel_image(previous=False):
                 session['current'] = record
                 path = "/static/data/" + record['original']
 
-                print("TEST NONE: ", record['original'])
+                #print("TEST NONE: ", record['original'])
 
                 return render_template('relabel.html',
                     image_path=path,
                     image_name=record['original'])
 
             except StopIteration:
-                return """Congrats, You're Done :) 
-                To be sure reboot app."""
+                return render_template('done.html')
         else:
 
 
             contour = request.form.get('contour')
             numbers = request.form.get('numbers')
             hands = request.form.get('hands')
+
+            #print("FEATURES: ", contour, numbers, hands)
 
             tail = createLabel(contour,
                     numbers,
@@ -163,10 +165,11 @@ def do_relabel_image(previous=False):
                     {"$set": new_record},
                     upsert=False)
 
-            """
             # Stale code, can remove later
+            """
             for doc in images.find({ "_id" : temp["_id"]}):
                 print(doc)
+
             """
 
             try:

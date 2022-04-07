@@ -1,40 +1,63 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>McLabeler</title>
-    <style>
-    .main-pane {
-        float: left;
-        width: 70%;
-    }
 
-    .side-pane {
-    }
-    </style>
-    </head>
-    
-    <body>
-        <div>
-        <div class="main-pane">
-            <h2>{{image_name}}</h2>
-            <img src={{image_path}}>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Brand</title>
+    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="static/assets/css/untitled.css">
+</head>
+
+<body>
+    <main class="page product-page">
+        <section class="clean-block clean-product dark">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">McLabeler</h2>
+                    <p>Bada-bah bah baah, Im labeling it.</p>
+                </div>
+                <div class="block-content">
+                    <div class="product-info">
+                        <div class="row">
+                            <div class="col-md-6"><img src={{image_path}} id="clock_imagePlaceholder"></div>
+                            <div class="col-md-6">
+                              <form method="POST" action="/relabel">
+                                <div class="info">
+                                    <div class="price">
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"
+                                            name="contour"><label class="form-check-label" for="formCheck-1">Contour</label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"
+                                            name="numbers"><label class="form-check-label" for="formCheck-1">Numbers</label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"
+                                            name="hands"><label class="form-check-label" for="formCheck-1">Hands</label></div>
+                                    </div><button class="btn btn-primary" type="submit">Score</button>
+                                    <div class="summary"></div>
+                                </div>
+                              </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <ul></ul>
+                </div>
+            </div>
         </div>
-        <div class="side-pane">
-            <h1> Features </h1>
-            <form method="POST" action="/relabel">
-                <input type="checkbox"
-                       name="contour"
-                       value="contour"> Contour <br>
-                <input type="checkbox"
-                       name="numbers"
-                       value="numbers"> Numbers <br>
-                <input type="checkbox"
-                       name="hands"
-                       value="hands"> Hands <br><br><br>
-                <input type="submit"
-                       value="Submit">
-            </form>
+        <div class="footer-copyright">
+            <p>© 2018 McMaster University</p>
         </div>
-        </div>
-    </body>
+    </footer>
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/assets/js/theme.js"></script>
+</body>
+
 </html>

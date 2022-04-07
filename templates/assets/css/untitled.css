@@ -1,0 +1,90 @@
+#info_group {
+  max-width:600px;
+}
+
+#int_collab {
+  font-size:20px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+#contactButton {
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+}
+
+#collabSection {
+  padding-top:200px;
+}
+
+.form-check {
+  padding-top:65px;
+  margin-left:50px;
+}
+
+#formCheck-1 {
+  transform:scale(5);
+  -ms-transform:scale(5);
+  -webkit-transform:scale(5);
+  -o-transform:scale(5);
+  -moz-transform:scale(5);
+}
+
+.clean-block.clean-product .product-info .info button {
+  margin-top:40px;
+  margin-left:25px;
+}
+
+.form-check-label {
+  margin-left:50px;
+  font-size:25px;
+}
+
+.clean-block.clean-product .product-info .info button {
+  font-size:25px;
+}
+
+#clock_imagePlaceholder {
+  max-width:400px;
+  min-width:400px;
+  min-height:400px;
+}
+
+#SignUp {
+  background-color:darkgreen;
+}
+
+.btn:not(:disabled):not(.disabled) {
+}
+
+#backlogin {
+  background-color:darkgreen;
+}
+
+.clean-block .block-heading {
+  padding-top:40px;
+}
+
+#new_checkbox {
+  transform:scale(4);
+  zoom:2;
+}
+
+#doneId {
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+  text-align:center;
+}
+
+#celebrate_image {
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+  margin-top:50px;
+  width:700px;
+}
+
