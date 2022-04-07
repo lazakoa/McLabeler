@@ -4,6 +4,9 @@ McLabeler is a small utility to help relabel a relatively large dataset. App fol
 
 ## How-to run the app
 
+Installing the required dependencies:
+pip install -r requirements.txt
+
 Starting mongo:
 mongod --port 27017 --dbpath=./database
 
