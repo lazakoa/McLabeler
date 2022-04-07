@@ -88,20 +88,20 @@ def do_user_signup():
 # in progress, adding users, still working on it
 @app.route('/relabel', methods=['GET', 'POST'])
 def do_relabel_image(previous=False):
+
     
     """
     Read off the record queue, display a message if queue is empty.
     """
-    
-    # CHECK IF BUG PERSISTS
+        
     if request.method == "GET":
-
         try:
             record = next(image_queue)
         except StopIteration:
             return "Congrats, You're Done :) To be sure reboot app."
         
         session['current'] = record
+
         path = "/static/data/" + record['original']
 
 
@@ -110,50 +110,59 @@ def do_relabel_image(previous=False):
                 image_name=record['original'])
 
     if request.method == "POST":
-        # TODO, take the input from the form and update the record
-        # BUG WOULD START HERE, add a take off the cursor here  
+
         record = session.get('current')
-
-        contour = request.form.get('contour')
-        numbers = request.form.get('numbers')
-        hands = request.form.get('hands')
-         
-        updated_label= record['original'][:-6] + createLabel(
-                                                    contour,
-                                                    numbers,
-                                                    hands)
         
-        new_record = { "original": record["original"],
-                "relabeled": 1,
-                "new_label": updated_label,
-                "author": session["username"],
-                "date": datetime.datetime.utcnow()}
+        if record == None:
 
-        print(new_record)
+            try:
+                record = next(image_queue)
 
-        """
-        images.update_one("_id": record["_id"],
+                # session['current'] = 
+                path = "/static/data/" + record['original']
+
+                return render_template('relabel.html',
+                    image_path=path,
+                    image_name=record['original'])
+
+            except StopIteration:
+                return """Congrats, You're Done :) 
+                To be sure reboot app."""
+        else:
+            contour = request.form.get('contour')
+            numbers = request.form.get('numbers')
+            hands = request.form.get('hands')
+         
+            updated_label= record['original'][:-6] + createLabel(
+                                                        contour,
+                                                        numbers,
+                                                        hands)
+        
+            new_record = { "original": record["original"],
+                    "relabeled": 1,
+                    "new_label": updated_label,
+                    "author": session["username"],
+                    "date": datetime.datetime.utcnow()}
+
+
+            """
+            images.update_one("_id": record["_id"],
                 "$set": new_record,
                 upsert=False)
-        """
+            """
 
-        try:
-            record = next(image_queue)
-        except StopIteration:
-            return "Congrats, You're Done :) To be sure reboot app."
+            try:
+                record = next(image_queue)
+            except StopIteration:
+                return """Congrats, You're Done :) 
+                        To be sure reboot app."""
 
-        session['current'] = record
-        path = "/static/data/" + record['original']
+            session['current'] = record
+            path = "/static/data/" + record['original']
 
-
-        return render_template('relabel.html',
-                image_path=path,
-                image_name=record['original'])
-
-    # THIS ISN'T NEEDED
-    return render_template('relabel.html',
-            image_path=path,
-            image_name=record['original'])
+            return render_template('relabel.html',
+                    image_path=path,
+                    image_name=record['original'])
 
 def createLabel(contour, numbers, hands):
     # small utility function to creat a c*n*h* label
