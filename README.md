@@ -11,7 +11,7 @@ Starting flask in debug mode:
 FLASK_APP=mclabeler.py FLASK_DEBUG=1 python -m flask run
 
 If you are using the application for the first time, you must first load all the images into MongoDB. Do this with by running:
-./load_data
+./load_data.py
 
 If running for the first time, you must also copy all the images from the **data/** direcotor into the **static/data** directory. Doing so is required for Flask to display the images.
 
