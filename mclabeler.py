@@ -23,7 +23,8 @@ image_db = client['imagedb']
 users = image_db['users'] 
 images = image_db['image-names'] # This is our collection
 
-image_queue = images.find({ "relabeled" : 0 })
+image_queue = map(lambda x: sanitizeRecord(x),
+        list(images.find({ "relabeled" : 0 })))
 
 # TODO, add support for return to previously labeled images.
 previous_queue = None
@@ -103,7 +104,7 @@ def do_relabel_image(previous=False):
         except StopIteration:
             return "Congrats, You're Done :) To be sure reboot app."
         
-        session['current'] = sanitizeRecord(record)
+        session['current'] = record
 
         path = "/static/data/" + record['original']
 
@@ -121,7 +122,7 @@ def do_relabel_image(previous=False):
             try:
                 record = next(image_queue)
 
-                session['current'] = sanitizeRecord(record)
+                session['current'] = record
                 path = "/static/data/" + record['original']
 
                 print("TEST NONE: ", record['original'])
@@ -157,13 +158,16 @@ def do_relabel_image(previous=False):
             # Push update to the database
 
             temp = loads(dumps(record))
-
+            
             images.update_one({"_id": temp['_id']},
                     {"$set": new_record},
                     upsert=False)
 
+            """
+            # Stale code, can remove later
             for doc in images.find({ "_id" : temp["_id"]}):
                 print(doc)
+            """
 
             try:
                 record = next(image_queue)
@@ -171,7 +175,7 @@ def do_relabel_image(previous=False):
                 return """Congrats, You're Done :) 
                         To be sure reboot app."""
 
-            session['current'] = sanitizeRecord(record)
+            session['current'] = record
             path = "/static/data/" + record['original']
 
             return render_template('relabel.html',
