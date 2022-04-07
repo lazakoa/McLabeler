@@ -22,8 +22,9 @@ image_db = client['imagedb']
 users = image_db['users'] 
 images = image_db['image-names'] # This is our collection
 
-image_queue = iter(list(map(lambda x: sanitizeRecord(x),
-        list(images.find({ "relabeled" : 0 })))))
+# This might need to be adjusted if db timeout issue comes back.
+image_queue = map(lambda x: sanitizeRecord(x),
+        list(images.find({ "relabeled" : 0 })))
 
 # TODO, add support for return to previously labeled images.
 previous_queue = None
@@ -95,7 +96,8 @@ def do_relabel_image(previous=False):
     """
     Read off the record queue, display a message if queue is empty.
     """
-
+    
+    # fix for the session expiration issue, no idea why it happens :(
     if not session.get('logged_in'):
         return render_template('login.html')
 
