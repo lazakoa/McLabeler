@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>McLabeler</title>
+    <style>
+    .main-pane {
+        float: left;
+        width: 70%;
+    }
+
+    .side-pane {
+    }
+    </style>
+    </head>
+    
+    <body>
+        <div>
+        <div class="main-pane">
+            <h2>{{image_name}}</h2>
+            <img src={{image_path}}>
+        </div>
+        <div class="side-pane">
+            <h1> Features </h1>
+            <form method="POST" action="/relabel">
+                <input type="checkbox"
+                       name="contour"
+                       value="contour"> Contour <br>
+                <input type="checkbox"
+                       name="numbers"
+                       value="numbers"> Numbers <br>
+                <input type="checkbox"
+                       name="hands"
+                       value="hands"> Hands <br><br><br>
+                <input type="submit"
+                       value="Submit">
+            </form>
+        </div>
+        </div>
+    </body>
+</html>

@@ -4,3 +4,6 @@ data/
 
 # Directory for MongoDB.
 database/
+
+# Python stuff
+__pycache__/
