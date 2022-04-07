@@ -3,7 +3,6 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template
 from flask import request, session, abort
-
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 import json
@@ -23,8 +22,8 @@ image_db = client['imagedb']
 users = image_db['users'] 
 images = image_db['image-names'] # This is our collection
 
-image_queue = map(lambda x: sanitizeRecord(x),
-        list(images.find({ "relabeled" : 0 })))
+image_queue = iter(list(map(lambda x: sanitizeRecord(x),
+        list(images.find({ "relabeled" : 0 })))))
 
 # TODO, add support for return to previously labeled images.
 previous_queue = None
@@ -35,7 +34,6 @@ def home():
         return render_template('login.html')
     else:
         return do_relabel_image()
-
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
@@ -98,8 +96,11 @@ def do_relabel_image(previous=False):
     Read off the record queue, display a message if queue is empty.
     """
 
-    # Working on the relabel page,
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     if request.method == "GET":
+
         try:
             record = next(image_queue)
         except StopIteration:
@@ -175,8 +176,8 @@ def do_relabel_image(previous=False):
             try:
                 record = next(image_queue)
             except StopIteration:
-                return """Congrats, You're Done :) 
-                        To be sure reboot app."""
+                return  render_template('done.html')
+
 
             session['current'] = record
             path = "/static/data/" + record['original']
